@@ -3,21 +3,75 @@
 
 <body>
   <div class="mermaid">
-graph LR
-A-->B
-  </div>
-  <div class="mermaid">
-gantt
-title A Gantt Diagram
-dateFormat  YYYY-MM-DD
-section Section
-A task           :a1, 2014-01-01, 30d
-Another task     :after a1  , 20d
-section Another
-Task in sec      :2014-01-12  , 12d
-another task      : 24d
+    sequenceDiagram
+      participant W as Wallet
+      participant A as Anchor
+      participant S as Stellar
+      W-xA: [SEP6] /withdraw/params
+      A->>W: [SEP6] 403 - /kyc(...)
+      W->>A: [SEP10] GET /web_auth
+      A->>W: [SEP10] Challenge
+      W->>A: [SEP10] POST /web_auth
+      A->>W: [SEP10] JWT
+      W->>A: [SEP12] PUT /customer
+      Note over A: KYC Checks
+      A->>W: [SEP12] 200
+      W->>A: [SEP6] /withdraw/params
+      A->>W: [SEP6] 200
+      W->>S: [SEP10] POST /transaction
+      S->>W: [SEP10] 200
+      S->>A: [SEP10] TX120, memo
+      Note over A: Deposit
   </div>
   <script src="index.bundle.js" charset="utf-8"></script>
 </body>
+
+  <style>
+    body {
+      background-color: #fbfaf7;
+      font-family: sans-serif;
+    }
+    .actor{
+      stroke: #000000;
+      stroke-width: 2px;
+      fill:#ffffff;
+    }
+
+    #arrowhead {
+      fill:#4a4a49;
+    }
+
+    .actor-line {
+      stroke: #999999;
+      opacity: 0.5;
+      stroke-width: 2px;
+      stroke-dasharray: 5;
+      stroke-linecap: round;
+    }
+
+    .messageLine0 {
+      stroke: #4a4a49;
+      stroke-width: 2;
+      marker-end: url(#arrowhead)!important;
+    }
+
+    #mermaidChart0 > g:nth-child(6) {
+      stroke: red;
+      display: none;
+    }
+
+    .messageLine1 {
+      stroke: rebeccapurple;
+    }
+
+    .messageText {
+      font-size: 0.875rem;
+    }
+
+    .note {
+      fill: #fae7cb;
+      stroke: #D0AF7E;
+    }
+  </style>
 
 </html>
